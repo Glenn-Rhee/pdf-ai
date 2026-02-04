@@ -1,3 +1,9 @@
+import MaxWidthWrapper from "@/src/components/MaxWidthWrapper";
+
 export default function HomePage() {
-  return <div>cihuy</div>
-};
+  return (
+    <MaxWidthWrapper className="">
+      <div>cihuy</div>
+    </MaxWidthWrapper>
+  );
+}
