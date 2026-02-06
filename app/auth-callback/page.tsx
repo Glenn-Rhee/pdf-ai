@@ -7,4 +7,8 @@ export default function AuthCallbackPage() {
   const searchParams = useSearchParams();
   const origin = searchParams.get("origin");
 
+  const { data, isLoading, isSuccess, isError } = trpc.authCallback.useQuery();
+  if (isSuccess) {
+    router.push(origin ? `/${origin}` : "/dashboard");
+  }
 }
