@@ -5,6 +5,7 @@ import { cn } from "@/src/lib/utils";
 import Navbar from "@/src/components/Navbar";
 import { AuthProvider } from "./authProvider";
 import TrcProvider from "@/src/components/TrcProvider";
+import "react-loading-skeleton/dist/skeleton.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
