@@ -1,7 +1,8 @@
 import { withAuth } from "@kinde-oss/kinde-auth-nextjs/server";
 import { MiddlewareConfig, NextRequest } from "next/server";
 
-export default withAuth(async function proxy(req: NextRequest) {}, {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export default withAuth(async function proxy(_req: NextRequest) {}, {
   publicPaths: ["/"],
 });
 
