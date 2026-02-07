@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import Dashboard from "@/src/components/Dashboard";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { redirect } from "next/navigation";
 
@@ -10,5 +11,5 @@ export default async function DashboardPage() {
   const dataUser = await prisma.user.findFirst({ where: { id: user.id } });
   if (!dataUser) redirect("/auth-callback?origin=dashboard");
 
-  return <div>{user?.email}</div>;
+  return <Dashboard />;
 }
