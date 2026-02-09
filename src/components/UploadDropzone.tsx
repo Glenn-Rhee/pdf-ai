@@ -35,6 +35,7 @@ export default function UploadDropzone() {
           className="border h-64 m-4 border-dashed border-gray-300 rounded-lg"
           {...getRootProps()}
         >
+          <input {...getInputProps()} />
           <div className="flex items-center justify-center h-full w-full">
             <label
               htmlFor="dropzone-file"
