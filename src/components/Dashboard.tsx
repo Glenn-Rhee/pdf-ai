@@ -82,7 +82,14 @@ export default function Dashboard() {
             ))}
         </ul>
       ) : isLoading ? (
-        <Skeleton height={100} className="my-2" count={3} />
+        <div className="mt-8 grid grid-cols-1 gap-6 divide-y divide-zinc-200 md:grid-cols-2 lg:grid-cols-3">
+          <Skeleton height={100} className="my-2" count={2} />
+          <Skeleton height={100} className="my-2" count={2} />
+          <Skeleton height={100} className="my-2" count={2} />
+          <Skeleton height={100} className="my-2" count={2} />
+          <Skeleton height={100} className="my-2" count={2} />
+          <Skeleton height={100} className="my-2" count={2} />
+        </div>
       ) : (
         <div className="mt-16 flex flex-col items-center gap-2">
           <Ghost className="h-8 w-8 text-zinc-800" />
