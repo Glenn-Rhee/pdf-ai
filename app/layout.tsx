@@ -6,6 +6,7 @@ import Navbar from "@/src/components/Navbar";
 import { AuthProvider } from "./authProvider";
 import TrcProvider from "@/src/components/TrcProvider";
 import "react-loading-skeleton/dist/skeleton.css";
+import { Toaster } from "react-hot-toast";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -37,6 +38,7 @@ export default function RootLayout({
       >
         <AuthProvider>
           <TrcProvider>
+            <Toaster />
             <Navbar />
             {children}
           </TrcProvider>

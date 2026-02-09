@@ -29,6 +29,23 @@ export const appRouter = router({
       where: { userId },
     });
   }),
+  getFile: privateProcedure
+    .input(FileValidation.GETFILE)
+    .mutation(async ({ ctx, input }) => {
+      const { userId } = ctx;
+      const file = await prisma.file.findFirst({
+        where: {
+          key: input.key,
+          userId,
+        },
+      });
+
+      if (!file) {
+        throw new TRPCError({ code: "NOT_FOUND" });
+      }
+
+      return file;
+    }),
   deleteFile: privateProcedure
     .input(FileValidation.DELETEFILE)
     .mutation(async ({ ctx, input }) => {

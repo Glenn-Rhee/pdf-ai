@@ -1,31 +1,38 @@
+import { prisma } from "@/lib/prisma";
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { createUploadthing, type FileRouter } from "uploadthing/next";
 import { UploadThingError } from "uploadthing/server";
 
 const f = createUploadthing();
 
-const auth = (req: Request) => ({ id: "fakeId" });
-
 export const ourFileRouter = {
-  imageUploader: f({
-    image: {
+  pdfUploader: f({
+    pdf: {
       maxFileSize: "4MB",
       maxFileCount: 1,
     },
   })
     // Set permissions and file types for this FileRoute
-    .middleware(async ({ req }) => {
-      const user = await auth(req);
-
-      if (!user) throw new UploadThingError("Unauthorized");
+    .middleware(async ({}) => {
+      const { getUser } = getKindeServerSession();
+      const user = await getUser();
+      if (!user || !user.id) throw new UploadThingError({ code: "FORBIDDEN" });
 
       return { userId: user.id };
     })
+    .onUploadError((inputErr) => {
+      console.log(inputErr.error);
+    })
     .onUploadComplete(async ({ metadata, file }) => {
-      console.log("Upload complete for userId:", metadata.userId);
-
-      console.log("file url", file.ufsUrl);
-
-      return { uploadedBy: metadata.userId };
+      await prisma.file.create({
+        data: {
+          key: file.key,
+          name: file.name,
+          url: file.ufsUrl,
+          userId: metadata.userId,
+          uploadStatus: "PROCESSING",
+        },
+      });
     }),
 } satisfies FileRouter;
 

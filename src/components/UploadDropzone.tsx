@@ -2,34 +2,73 @@
 import { Progress } from "@/components/ui/progress";
 import { Cloud, File } from "lucide-react";
 import { useState } from "react";
-import Dropzone from "react-dropzone";
+import Dropzone, { FileRejection } from "react-dropzone";
+import { useUploadThing } from "../lib/uploadthing";
+import toast from "react-hot-toast";
+import { trpc } from "@/app/_trpc/client";
+import { useRouter } from "next/navigation";
+import { UploadThingError } from "uploadthing/server";
 export default function UploadDropzone() {
+  const router = useRouter();
   const [uploading, setUploading] = useState<boolean>(false);
   const [uploadProgress, setUploadProgress] = useState<number>(0);
-  const startSimulatedProgress = () => {
-    setUploadProgress(0);
+  const { startUpload } = useUploadThing("pdfUploader", {
+    onUploadProgress: (p) => setUploadProgress(p),
+  });
+  const { mutate: startPolling } = trpc.getFile.useMutation({
+    onSuccess: (file) => {
+      router.push(`/dashboard/${file.id}`);
+    },
+    retry: true,
+    retryDelay: 500,
+  });
 
-    const interval = setInterval(() => {
-      setUploadProgress((prev) => {
-        if (prev >= 95) {
-          clearInterval(interval);
-          return prev;
-        }
-        return prev + 5;
-      });
-    }, 500);
-
-    return interval;
-  };
-  const onDropFile = (acceptedFile: File[]) => {
+  const onDropFile = async (acceptedFile: File[]) => {
     setUploading(true);
-    const progressInterval = startSimulatedProgress();
-    // Handle upload file
-    clearInterval(progressInterval);
-    setUploadProgress(100);
+    try {
+      if (acceptedFile.length > 1) {
+        throw new Error("Maximum file is only one!");
+      }
+      const resFile = await startUpload(acceptedFile);
+      if (!resFile) {
+        throw new UploadThingError("Something wrong! Please try again later.");
+      }
+
+      const [file] = resFile;
+      startPolling({ key: file.key });
+      toast.success("Successfully upload file!");
+    } catch (error) {
+      if (error instanceof UploadThingError) {
+        toast.error(error.message);
+      } else if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error("Something wrong. Please try again later!");
+      }
+    } finally {
+      setUploading(false);
+      setUploadProgress(0);
+    }
+  };
+
+  const onDropRejected = (rejectFiles: FileRejection[]) => {
+    const [file] = rejectFiles;
+    if (file.errors.some((err) => err.code.includes("type"))) {
+      toast.error("Please choose a PDF file instead.");
+    } else if (file.errors.some((err) => err.code.includes("large"))) {
+      toast.error("Please choose a file less then 4MB");
+    } else {
+      toast.error("Something went wrong! Please try again later");
+    }
   };
   return (
-    <Dropzone multiple={false} onDrop={onDropFile}>
+    <Dropzone
+      accept={{
+        "application/pdf": [".pdf"],
+      }}
+      onDropRejected={onDropRejected}
+      onDropAccepted={onDropFile}
+    >
       {({ getRootProps, getInputProps, acceptedFiles }) => (
         <div
           className="border h-64 m-4 border-dashed border-gray-300 rounded-lg"
@@ -41,25 +80,27 @@ export default function UploadDropzone() {
               htmlFor="dropzone-file"
               className="flex flex-col items-center justify-center w-full h-full rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100"
             >
-              <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                <Cloud className="h-6 w-6 text-zinc-500 mb-2" />
-                <p className="mb-2 text-sm text-zinc-700">
-                  <span className="font-semibold">Click to upload</span> or drag
-                  and drop.
-                </p>
-                <p className="text-xs text-zinc-500">PDF (up to 4MB)</p>
-              </div>
-
-              {acceptedFiles && acceptedFiles[0] ? (
-                <div className="max-w-xs bg-white flex items-center rounded-md overflow-hidden outline-[1px] outline-zinc-200 divide-x divide-zinc-200">
-                  <div className="px-3 py-2 h-full grid place-items-center">
-                    <File className="w-4 h-4 text-orange-500" />
+              {uploading ? (
+                acceptedFiles && acceptedFiles[0] ? (
+                  <div className="max-w-xs bg-white flex items-center rounded-md overflow-hidden outline-[1px] outline-zinc-200 divide-x divide-zinc-200">
+                    <div className="px-3 py-2 h-full grid place-items-center">
+                      <File className="w-4 h-4 text-orange-500" />
+                    </div>
+                    <div className="px-3 py-2 h-full text-sm truncate">
+                      {acceptedFiles[0].name}
+                    </div>
                   </div>
-                  <div className="px-3 py-2 h-full text-sm truncate">
-                    {acceptedFiles[0].name}
-                  </div>
+                ) : null
+              ) : (
+                <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                  <Cloud className="h-6 w-6 text-zinc-500 mb-2" />
+                  <p className="mb-2 text-sm text-zinc-700">
+                    <span className="font-semibold">Click to upload</span> or
+                    drag and drop.
+                  </p>
+                  <p className="text-xs text-zinc-500">PDF (up to 4MB)</p>
                 </div>
-              ) : null}
+              )}
 
               {uploading ? (
                 <div className="w-full mt-4 max-w-xs mx-auto">
