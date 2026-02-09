@@ -8,59 +8,6 @@ import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 
-const filesDummy = [
-  {
-    userId: "user_001",
-    id: "file_001",
-    name: "invoice_january.pdf",
-    uploadStatus: "SUCCESS",
-    url: "https://cdn.example.com/files/invoice_january.pdf",
-    key: "files/invoice_january.pdf",
-    createdAt: "2024-01-10T08:30:00Z",
-    updatedAt: "2024-01-10T08:30:00Z",
-  },
-  {
-    userId: "user_002",
-    id: "file_002",
-    name: "profile_photo.png",
-    uploadStatus: "UPLOADING",
-    url: "https://cdn.example.com/files/profile_photo.png",
-    key: "files/profile_photo.png",
-    createdAt: "2024-02-05T10:15:00Z",
-    updatedAt: "2024-02-05T10:16:00Z",
-  },
-  {
-    userId: "user_003",
-    id: "file_003",
-    name: "backup_february.zip",
-    uploadStatus: "FAILED",
-    url: "",
-    key: "files/backup_february.zip",
-    createdAt: "2024-02-20T14:00:00Z",
-    updatedAt: "2024-02-20T14:01:00Z",
-  },
-  {
-    userId: "user_004",
-    id: "file_004",
-    name: "presentation.pptx",
-    uploadStatus: "SUCCESS",
-    url: "https://cdn.example.com/files/presentation.pptx",
-    key: "files/presentation.pptx",
-    createdAt: "2024-03-01T09:00:00Z",
-    updatedAt: "2024-03-01T09:05:00Z",
-  },
-  {
-    userId: "user_005",
-    id: "file_005",
-    name: "report_final.docx",
-    uploadStatus: "PROCESSING",
-    url: "https://cdn.example.com/files/report_final.docx",
-    key: "files/report_final.docx",
-    createdAt: "2024-03-10T16:45:00Z",
-    updatedAt: "2024-03-10T16:46:00Z",
-  },
-];
-
 export default function Dashboard() {
   const [currDeletingFile, setCurrDeletingFile] = useState<string | null>(null);
   const utils = trpc.useUtils();
@@ -80,9 +27,9 @@ export default function Dashboard() {
       </div>
 
       {/* Display user files */}
-      {filesDummy && filesDummy.length !== 0 ? (
+      {files && files.length !== 0 ? (
         <ul className="mt-8 grid grid-cols-1 gap-6 divide-y divide-zinc-200 md:grid-cols-2 lg:grid-cols-3">
-          {filesDummy
+          {files
             .sort(
               (a, b) =>
                 new Date(b.createdAt).getTime() -
