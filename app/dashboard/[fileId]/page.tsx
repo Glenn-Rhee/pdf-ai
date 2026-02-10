@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import ChatWrapper from "@/src/components/ChatWrapper";
-import PdfRenderer from "@/src/components/PdfRenderer";
+import WrapperPdf from "@/src/components/WrapperPdf";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { notFound, redirect } from "next/navigation";
 
@@ -16,18 +16,19 @@ export default async function FileDetailPage(props: FileDetailPageProps) {
 
   if (!user || !user.id) redirect("/auth-callback?origin=dashboard/" + fileId);
 
-//   const file = await prisma.file.findFirst({
-//     where: { id: fileId, userId: user.id },
-//   });
+  const file = await prisma.file.findFirst({
+    where: { id: fileId, userId: user.id },
+    select: { id: true, url: true },
+  });
 
-  //   if (!file) notFound();
+  if (!file) notFound();
   return (
     <div className="flex-1 justify-between flex flex-col h-[calc(100dvh-3.5rem)]">
       <div className="mx-auto w-full max-w-7xl grow lg:flex xl:px-2">
         {/* left sidebar */}
         <div className="flex-1 xl:flex">
           <div className="px-4 py-6 sm:px-6 lg:pl-8 xl:flex-1 xl:pl-6">
-            <PdfRenderer />
+            <WrapperPdf url={file.url} />
           </div>
         </div>
 
