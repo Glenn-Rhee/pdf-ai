@@ -6,6 +6,7 @@ import Navbar from "@/src/components/Navbar";
 import { AuthProvider } from "./authProvider";
 import TrcProvider from "@/src/components/TrcProvider";
 import "react-loading-skeleton/dist/skeleton.css";
+import "simplebar-react/dist/simplebar.min.css";
 import { Toaster } from "react-hot-toast";
 
 const geistSans = Geist({
