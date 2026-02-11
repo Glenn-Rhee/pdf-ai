@@ -59,6 +59,9 @@ export default function PdfRenderer(props: PdfRendererProps) {
           </Button>
           <div className="flex items-center gap-1.5">
             <Input
+              maxLength={
+                typeof numPages !== "undefined" ? `${numPages}`.length : 1
+              }
               className={cn(
                 "w-12 h-8 text-center",
                 errors.page && "focus-visible:outline-red-500",
