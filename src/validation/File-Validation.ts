@@ -6,4 +6,12 @@ export default class FileValidation {
   static readonly GETFILE = z.object({
     key: z.string({ error: "Please fill key file!" }),
   });
+
+  static getCustomPageValidator(numPages: number) {
+    return z.object({
+      page: z
+        .string()
+        .refine((num) => Number(num) > 0 && Number(num) <= numPages!),
+    });
+  }
 }
