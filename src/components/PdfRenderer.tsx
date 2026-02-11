@@ -3,7 +3,7 @@ import { Document, Page, pdfjs } from "react-pdf";
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
 import { PdfRendererProps } from "./WrapperPdf";
-import { ChevronDown, ChevronUp, Loader2 } from "lucide-react";
+import { ChevronDown, ChevronUp, Loader2, Search } from "lucide-react";
 import toast from "react-hot-toast";
 import { useResizeDetector } from "react-resize-detector";
 import { Button } from "@/components/ui/button";
@@ -14,6 +14,12 @@ import z from "zod";
 import FileValidation from "../validation/File-Validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { cn } from "@/lib/utils";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.mjs",
   import.meta.url,
@@ -24,6 +30,7 @@ export default function PdfRenderer(props: PdfRendererProps) {
   const { width, ref } = useResizeDetector();
   const [numPages, setNumPages] = useState<number>();
   const [currPage, setCurrPage] = useState<number>(1);
+  const [scale, setScale] = useState<number>(1);
   const CustomPageValidator = FileValidation.getCustomPageValidator(numPages!);
 
   type TCustomPageValidator = z.infer<typeof CustomPageValidator>;
@@ -91,6 +98,30 @@ export default function PdfRenderer(props: PdfRendererProps) {
             <ChevronUp className="h-4 w-4" />
           </Button>
         </div>
+        <div className="space-x-2">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button className="gap-1.5" aria-label="zoom" variant={"ghost"}>
+                <Search className="h-4 w-4" />
+                {scale * 100}%<ChevronDown className="w-3 h-3 opacity-50" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuItem onSelect={() => setScale(1)}>
+                100%
+              </DropdownMenuItem>
+              <DropdownMenuItem onSelect={() => setScale(1.5)}>
+                150%
+              </DropdownMenuItem>
+              <DropdownMenuItem onSelect={() => setScale(2)}>
+                200%
+              </DropdownMenuItem>
+              <DropdownMenuItem onSelect={() => setScale(2.5)}>
+                250%
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
 
       <div className="flex-1 w-full max-h-screen">
@@ -115,7 +146,7 @@ export default function PdfRenderer(props: PdfRendererProps) {
             }
             className={"max-h-full"}
           >
-            <Page width={width || 1} pageNumber={currPage} />
+            <Page scale={scale} width={width || 1} pageNumber={currPage} />
           </Document>
         </div>
       </div>
