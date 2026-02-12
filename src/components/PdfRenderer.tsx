@@ -3,7 +3,13 @@ import { Document, Page, pdfjs } from "react-pdf";
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
 import { PdfRendererProps } from "./WrapperPdf";
-import { ChevronDown, ChevronUp, Loader2, Search } from "lucide-react";
+import {
+  ChevronDown,
+  ChevronUp,
+  Loader2,
+  RotateCw,
+  Search,
+} from "lucide-react";
 import toast from "react-hot-toast";
 import { useResizeDetector } from "react-resize-detector";
 import { Button } from "@/components/ui/button";
@@ -32,6 +38,7 @@ export default function PdfRenderer(props: PdfRendererProps) {
   const [numPages, setNumPages] = useState<number>();
   const [currPage, setCurrPage] = useState<number>(1);
   const [scale, setScale] = useState<number>(1);
+  const [rotation, setRotation] = useState<number>(0);
   const CustomPageValidator = FileValidation.getCustomPageValidator(numPages!);
 
   type TCustomPageValidator = z.infer<typeof CustomPageValidator>;
@@ -122,6 +129,13 @@ export default function PdfRenderer(props: PdfRendererProps) {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
+          <Button
+            onClick={() => setRotation((prev) => prev + 90)}
+            aria-label="rotate 90 degrees"
+            variant={"ghost"}
+          >
+            <RotateCw className="w-4 h-4" />
+          </Button>
         </div>
       </div>
 
@@ -148,7 +162,12 @@ export default function PdfRenderer(props: PdfRendererProps) {
               }
               className={"max-h-full"}
             >
-              <Page scale={scale} width={width || 1} pageNumber={currPage} />
+              <Page
+                rotate={rotation}
+                scale={scale}
+                width={width || 1}
+                pageNumber={currPage}
+              />
             </Document>
           </div>
         </SimpleBar>
