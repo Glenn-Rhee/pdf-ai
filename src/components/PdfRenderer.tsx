@@ -1,17 +1,9 @@
 "use client";
-import { Document, Page, pdfjs } from "react-pdf";
+import { pdfjs } from "react-pdf";
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
 import { PdfRendererProps } from "./WrapperPdf";
-import {
-  ChevronDown,
-  ChevronUp,
-  Loader2,
-  RotateCw,
-  Search,
-} from "lucide-react";
-import toast from "react-hot-toast";
-import { useResizeDetector } from "react-resize-detector";
+import { ChevronDown, ChevronUp, RotateCw, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
@@ -27,6 +19,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import SimpleBar from "simplebar-react";
+import PdfFullscreen from "./PdfFullscreen";
+import PagePdf from "./PagePdf";
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.mjs",
   import.meta.url,
@@ -34,7 +28,6 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 
 export default function PdfRenderer(props: PdfRendererProps) {
   const { url } = props;
-  const { width, ref } = useResizeDetector();
   const [numPages, setNumPages] = useState<number>();
   const [currPage, setCurrPage] = useState<number>(1);
   const [scale, setScale] = useState<number>(1);
@@ -136,40 +129,20 @@ export default function PdfRenderer(props: PdfRendererProps) {
           >
             <RotateCw className="w-4 h-4" />
           </Button>
+
+          <PdfFullscreen />
         </div>
       </div>
 
       <div className="flex-1 w-full max-h-screen">
         <SimpleBar autoHide={false} className="max-h-[calc(100dvh-10rem)]">
-          <div ref={ref}>
-            <Document
-              file={url}
-              loading={
-                <div className="flex justify-center">
-                  <Loader2 className="my-24 h-6 w-6 animate-spin" />
-                </div>
-              }
-              onLoadSuccess={({ numPages }) => setNumPages(numPages)}
-              onLoadError={() => {
-                toast.error("Error load pdf! Please try again later.");
-              }}
-              error={
-                <div className="flex justify-center">
-                  <p className="font-bold text-red-500 text-3xl my-20 text-center">
-                    Error load pdf! Please try again later.
-                  </p>
-                </div>
-              }
-              className={"max-h-full"}
-            >
-              <Page
-                rotate={rotation}
-                scale={scale}
-                width={width || 1}
-                pageNumber={currPage}
-              />
-            </Document>
-          </div>
+          <PagePdf
+            currPage={currPage}
+            rotation={rotation}
+            scale={scale}
+            setNumPages={setNumPages}
+            url={url}
+          />
         </SimpleBar>
       </div>
     </div>
