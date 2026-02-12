@@ -135,13 +135,16 @@ export default function PdfRenderer(props: PdfRendererProps) {
           </Button>
 
           <PdfFullscreen>
-            <PagePdf
-              currPage={currPage}
-              rotation={rotation}
-              scale={scale}
-              setNumPages={setNumPages}
-              url={url}
-            />
+            {new Array(numPages).fill(0).map((_, i) => (
+              <PagePdf
+                key={i}
+                currPage={currPage}
+                rotation={rotation}
+                scale={scale}
+                setNumPages={setNumPages}
+                url={url}
+              />
+            ))}
           </PdfFullscreen>
         </div>
       </div>
