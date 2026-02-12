@@ -59,7 +59,10 @@ export default function PdfRenderer(props: PdfRendererProps) {
         <div className="flex items-center gap-1.5">
           <Button
             disabled={currPage <= 1}
-            onClick={() => setCurrPage((prev) => (prev - 1 > 1 ? prev - 1 : 1))}
+            onClick={() => {
+              setCurrPage((prev) => (prev - 1 > 1 ? prev - 1 : 1));
+              setValue("page", String(currPage - 1));
+            }}
             variant={"ghost"}
             aria-label="previous-page"
           >
@@ -88,11 +91,12 @@ export default function PdfRenderer(props: PdfRendererProps) {
           </div>
           <Button
             disabled={typeof numPages === "undefined" || currPage === numPages}
-            onClick={() =>
+            onClick={() => {
               setCurrPage((prev) =>
                 prev + 1 > numPages! ? numPages! : prev + 1,
-              )
-            }
+              );
+              setValue("page", String(currPage + 1));
+            }}
             variant={"ghost"}
             aria-label="next-page"
           >
@@ -130,7 +134,15 @@ export default function PdfRenderer(props: PdfRendererProps) {
             <RotateCw className="w-4 h-4" />
           </Button>
 
-          <PdfFullscreen />
+          <PdfFullscreen>
+            <PagePdf
+              currPage={currPage}
+              rotation={rotation}
+              scale={scale}
+              setNumPages={setNumPages}
+              url={url}
+            />
+          </PdfFullscreen>
         </div>
       </div>
 
