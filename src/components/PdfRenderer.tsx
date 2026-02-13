@@ -34,7 +34,8 @@ export default function PdfRenderer(props: PdfRendererProps) {
   const [rotation, setRotation] = useState<number>(0);
   const CustomPageValidator = FileValidation.getCustomPageValidator(numPages!);
   type TCustomPageValidator = z.infer<typeof CustomPageValidator>;
-
+  const [renderedScale, setRenderedScale] = useState<number | null>(null);
+  const isLoading = renderedScale !== scale;
   const {
     register,
     handleSubmit,
@@ -136,6 +137,9 @@ export default function PdfRenderer(props: PdfRendererProps) {
           <PdfFullscreen fileName={fileName}>
             {new Array(numPages).fill(0).map((_, i) => (
               <PagePdf
+                setRenderedScale={setRenderedScale}
+                isLoading={isLoading}
+                renderedScale={renderedScale}
                 key={i}
                 currPage={currPage}
                 rotation={rotation}
@@ -151,6 +155,9 @@ export default function PdfRenderer(props: PdfRendererProps) {
       <div className="flex-1 w-full max-h-screen">
         <SimpleBar autoHide={false} className="max-h-[calc(100dvh-10rem)]">
           <PagePdf
+            setRenderedScale={setRenderedScale}
+            isLoading={isLoading}
+            renderedScale={renderedScale}
             currPage={currPage}
             rotation={rotation}
             scale={scale}

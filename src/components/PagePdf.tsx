@@ -1,4 +1,5 @@
 "use client";
+import { cn } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
 import { Dispatch, SetStateAction } from "react";
 import toast from "react-hot-toast";
@@ -11,10 +12,22 @@ interface PagePdfProps {
   rotation: number;
   scale: number;
   currPage: number;
+  isLoading: boolean;
+  renderedScale: number | null;
+  setRenderedScale: Dispatch<SetStateAction<number | null>>;
 }
 
 export default function PagePdf(props: PagePdfProps) {
-  const { url, setNumPages, rotation, scale, currPage } = props;
+  const {
+    url,
+    setNumPages,
+    rotation,
+    scale,
+    currPage,
+    isLoading,
+    renderedScale,
+    setRenderedScale,
+  } = props;
   const { width, ref } = useResizeDetector();
 
   return (
@@ -39,11 +52,29 @@ export default function PagePdf(props: PagePdfProps) {
         }
         className={"max-h-full"}
       >
+        {isLoading && renderedScale ? (
+          <Page
+            rotate={rotation}
+            scale={scale}
+            width={width || 1}
+            pageNumber={currPage}
+            key={"@" + renderedScale}
+          />
+        ) : null}
+
         <Page
           rotate={rotation}
           scale={scale}
           width={width || 1}
           pageNumber={currPage}
+          className={cn(isLoading ? "hidden" : "")}
+          key={"@" + scale}
+          loading={
+            <div className="fllex justify-center">
+              <Loader2 className="my-24 h-6 w-6 animate-spin" />
+            </div>
+          }
+          onRenderSuccess={() => setRenderedScale(scale)}
         />
       </Document>
     </div>
