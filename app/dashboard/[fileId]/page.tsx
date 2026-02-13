@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import ChatWrapper from "@/src/components/ChatWrapper";
+import ChatWrapper from "@/src/components/chat/ChatWrapper";
 import WrapperPdf from "@/src/components/WrapperPdf";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { notFound, redirect } from "next/navigation";
