@@ -27,13 +27,12 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 ).toString();
 
 export default function PdfRenderer(props: PdfRendererProps) {
-  const { url } = props;
+  const { url, fileName } = props;
   const [numPages, setNumPages] = useState<number>();
   const [currPage, setCurrPage] = useState<number>(1);
   const [scale, setScale] = useState<number>(1);
   const [rotation, setRotation] = useState<number>(0);
   const CustomPageValidator = FileValidation.getCustomPageValidator(numPages!);
-
   type TCustomPageValidator = z.infer<typeof CustomPageValidator>;
 
   const {
@@ -134,7 +133,7 @@ export default function PdfRenderer(props: PdfRendererProps) {
             <RotateCw className="w-4 h-4" />
           </Button>
 
-          <PdfFullscreen>
+          <PdfFullscreen fileName={fileName}>
             {new Array(numPages).fill(0).map((_, i) => (
               <PagePdf
                 key={i}

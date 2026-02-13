@@ -12,10 +12,11 @@ import SimpleBar from "simplebar-react";
 
 interface PdfFullScreenProps {
   children: React.ReactNode;
+  fileName: string;
 }
 
 export default function PdfFullscreen(props: PdfFullScreenProps) {
-  const { children } = props;
+  const { children, fileName } = props;
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   return (
@@ -33,7 +34,7 @@ export default function PdfFullscreen(props: PdfFullScreenProps) {
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-7xl w-full">
-        <DialogTitle>Full screen your pdf</DialogTitle>
+        <DialogTitle className="text-center">{fileName}</DialogTitle>
         <SimpleBar autoHide={false} className="max-h-[calc(100dvh-10rem)] mt-6">
           {children}
         </SimpleBar>
