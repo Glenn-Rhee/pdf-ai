@@ -3,6 +3,7 @@ import { privateProcedure, publicProcedure, router } from "./trpc";
 import { TRPCError } from "@trpc/server";
 import { prisma } from "@/lib/prisma";
 import FileValidation from "../validation/File-Validation";
+import { UploadStatus } from "../generated/prisma/enums";
 
 export const appRouter = router({
   authCallback: publicProcedure.query(async () => {
@@ -67,7 +68,7 @@ export const appRouter = router({
     }),
   getFileUploadStatus: privateProcedure
     .input(FileValidation.GETFILEUPLOADSTATUS)
-    .mutation(async ({ ctx, input }) => {
+    .query(async ({ ctx, input }) => {
       const file = await prisma.file.findFirst({
         where: {
           id: input.fileId,
@@ -82,7 +83,7 @@ export const appRouter = router({
       }
 
       return {
-        status: file.uploadStatus
+        status: file.uploadStatus as UploadStatus,
       };
     }),
 });
