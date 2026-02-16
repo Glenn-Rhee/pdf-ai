@@ -14,4 +14,8 @@ export default class FileValidation {
         .refine((num) => Number(num) > 0 && Number(num) <= numPages!),
     });
   }
+
+  static readonly GETFILEUPLOADSTATUS = z.object({
+    fileId: z.string({ error: "Please fill file id properly!" }),
+  });
 }
