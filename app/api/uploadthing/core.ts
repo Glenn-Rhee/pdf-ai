@@ -24,7 +24,7 @@ export const ourFileRouter = {
       console.log(inputErr.error);
     })
     .onUploadComplete(async ({ metadata, file }) => {
-      await prisma.file.create({
+      const createdFile = await prisma.file.create({
         data: {
           key: file.key,
           name: file.name,
