@@ -1,95 +1,12 @@
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
-import { privateProcedure, publicProcedure, router } from "./trpc";
-import { TRPCError } from "@trpc/server";
-import { prisma } from "@/lib/prisma";
-import FileValidation from "../validation/File-Validation";
-import { UploadStatus } from "../generated/prisma/enums";
-import { UTApi } from "uploadthing/server";
-const utapi = new UTApi();
+import { router } from "./trpc";
+import TrpcService from "../service/Trpc-Service";
 
 export const appRouter = router({
-  authCallback: publicProcedure.query(async () => {
-    const { getUser } = getKindeServerSession();
-    const user = await getUser();
-
-    if (!user?.id || !user.email) throw new TRPCError({ code: "UNAUTHORIZED" });
-    const dbUser = await prisma.user.findUnique({
-      where: { id: user.id },
-    });
-
-    if (!dbUser) {
-      await prisma.user.create({
-        data: { id: user.id, email: user.email },
-      });
-    }
-
-    return { success: true };
-  }),
-  getUserFiles: privateProcedure.query(async ({ ctx }) => {
-    const { userId } = ctx;
-
-    return await prisma.file.findMany({
-      where: { userId },
-    });
-  }),
-  getFile: privateProcedure
-    .input(FileValidation.GETFILE)
-    .mutation(async ({ ctx, input }) => {
-      const { userId } = ctx;
-      const file = await prisma.file.findFirst({
-        where: {
-          key: input.key,
-          userId,
-        },
-      });
-
-      if (!file) {
-        throw new TRPCError({ code: "NOT_FOUND" });
-      }
-
-      return file;
-    }),
-  deleteFile: privateProcedure
-    .input(FileValidation.DELETEFILE)
-    .mutation(async ({ ctx, input }) => {
-      const { userId } = ctx;
-      const file = await prisma.file.findFirst({
-        where: {
-          id: input.id,
-          userId,
-        },
-      });
-
-      if (!file) {
-        throw new TRPCError({ code: "NOT_FOUND" });
-      }
-
-      await utapi.deleteFiles(file.key);
-
-      await prisma.file.delete({ where: { id: input.id, userId } });
-
-      return file;
-    }),
-  getFileUploadStatus: privateProcedure
-    .input(FileValidation.GETFILEUPLOADSTATUS)
-    .query(async ({ ctx, input }) => {
-      const file = await prisma.file.findFirst({
-        where: {
-          id: input.fileId,
-          userId: ctx.userId,
-        },
-      });
-
-      if (!file) {
-        return {
-          status: "PENDING" as const,
-        };
-      }
-
-      return {
-        status: file.uploadStatus as UploadStatus,
-      };
-    }),
+  authCallback: await TrpcService.authCallback(),
+  getUserFiles: await TrpcService.getUserFiles(),
+  getFile: await TrpcService.getFile(),
+  deleteFile: await TrpcService.deleteFile(),
+  getFileUploadStatus: await TrpcService.getFileUploadStatus(),
 });
 
 export type AppRouter = typeof appRouter;
