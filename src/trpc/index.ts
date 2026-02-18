@@ -4,6 +4,8 @@ import { TRPCError } from "@trpc/server";
 import { prisma } from "@/lib/prisma";
 import FileValidation from "../validation/File-Validation";
 import { UploadStatus } from "../generated/prisma/enums";
+import { UTApi } from "uploadthing/server";
+const utapi = new UTApi();
 
 export const appRouter = router({
   authCallback: publicProcedure.query(async () => {
@@ -61,6 +63,8 @@ export const appRouter = router({
       if (!file) {
         throw new TRPCError({ code: "NOT_FOUND" });
       }
+
+      await utapi.deleteFiles(file.key);
 
       await prisma.file.delete({ where: { id: input.id, userId } });
 
