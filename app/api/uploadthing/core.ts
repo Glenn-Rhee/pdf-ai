@@ -36,14 +36,12 @@ export const ourFileRouter = {
         await prisma.file.update({
           where: { id: createdFile.id },
           data: { uploadStatus: "SUCCESS" },
-          select: {},
         });
       } catch (error) {
         console.log(error);
         await prisma.file.update({
           where: { id: createdFile.id },
           data: { uploadStatus: "FAILED" },
-          select: {},
         });
       }
     }),
