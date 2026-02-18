@@ -2,7 +2,6 @@ import { prisma } from "@/lib/prisma";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { createUploadthing, type FileRouter } from "uploadthing/next";
 import { UploadThingError } from "uploadthing/server";
-
 const f = createUploadthing();
 
 export const ourFileRouter = {
@@ -33,6 +32,20 @@ export const ourFileRouter = {
           uploadStatus: "PROCESSING",
         },
       });
+      try {
+        await prisma.file.update({
+          where: { id: createdFile.id },
+          data: { uploadStatus: "SUCCESS" },
+          select: {},
+        });
+      } catch (error) {
+        console.log(error);
+        await prisma.file.update({
+          where: { id: createdFile.id },
+          data: { uploadStatus: "FAILED" },
+          select: {},
+        });
+      }
     }),
 } satisfies FileRouter;
 
