@@ -35,7 +35,7 @@ export default function ChatWrapper(props: ChatWrapperProps) {
             </p>
           </div>
         </div>
-        <ChatInput isDisabled />
+        <ChatInput fileId={fileId} isDisabled />
       </div>
     );
 
@@ -49,7 +49,7 @@ export default function ChatWrapper(props: ChatWrapperProps) {
             <p className="text-zinc-500 text-sm">This Won&apos;t take long.</p>
           </div>
         </div>
-        <ChatInput isDisabled />
+        <ChatInput fileId={fileId} isDisabled />
       </div>
     );
 
@@ -75,7 +75,7 @@ export default function ChatWrapper(props: ChatWrapperProps) {
             </Link>
           </div>
         </div>
-        <ChatInput isDisabled />
+        <ChatInput fileId={fileId} isDisabled />
       </div>
     );
 
@@ -84,7 +84,7 @@ export default function ChatWrapper(props: ChatWrapperProps) {
       <div className="flex-1 justify-between flex flex-col mb-28">
         <Messages />
       </div>
-      <ChatInput />
+      <ChatInput fileId={fileId} />
     </div>
   );
 }
