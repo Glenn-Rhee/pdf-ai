@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import PDFService from "@/src/service/Pdf-Service";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { createUploadthing, type FileRouter } from "uploadthing/next";
 import { UploadThingError } from "uploadthing/server";
@@ -32,18 +33,21 @@ export const ourFileRouter = {
           uploadStatus: "PROCESSING",
         },
       });
-      try {
-        await prisma.file.update({
-          where: { id: createdFile.id },
-          data: { uploadStatus: "SUCCESS" },
-        });
-      } catch (error) {
-        console.log(error);
-        await prisma.file.update({
-          where: { id: createdFile.id },
-          data: { uploadStatus: "FAILED" },
-        });
-      }
+      await PDFService.ingestPdf(createdFile.id, createdFile.userId!);
+      // console.log(process.env.APP_URL);
+      // try {
+      //   console.log("Fetching data...");
+      //   const res = await fetch(process.env.APP_URL + "/api/ingest", {
+      //     method: "POST",
+      //     headers: {
+      //       "Content-Type": "application/json",
+      //     },
+      //     body: JSON.stringify({ fileId: createdFile.id }),
+      //   });
+      //   console.log(res.status);
+      // } catch (error) {
+      //   console.log(error);
+      // }
     }),
 } satisfies FileRouter;
 
