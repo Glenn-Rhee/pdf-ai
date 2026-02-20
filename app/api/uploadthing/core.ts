@@ -34,20 +34,6 @@ export const ourFileRouter = {
         },
       });
       await PDFService.ingestPdf(createdFile.id, createdFile.userId!);
-      // console.log(process.env.APP_URL);
-      // try {
-      //   console.log("Fetching data...");
-      //   const res = await fetch(process.env.APP_URL + "/api/ingest", {
-      //     method: "POST",
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //     },
-      //     body: JSON.stringify({ fileId: createdFile.id }),
-      //   });
-      //   console.log(res.status);
-      // } catch (error) {
-      //   console.log(error);
-      // }
     }),
 } satisfies FileRouter;
 
