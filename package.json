@@ -9,6 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@ai-sdk/openai": "^3.0.30",
     "@hookform/resolvers": "^5.2.2",
     "@kinde-oss/kinde-auth-nextjs": "^2.11.0",
     "@pinecone-database/pinecone": "^7.0.0",
@@ -25,6 +26,7 @@
     "@trpc/react-query": "^11.9.0",
     "@trpc/server": "^11.9.0",
     "@uploadthing/react": "^7.3.3",
+    "ai": "^6.0.94",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
