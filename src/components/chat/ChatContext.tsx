@@ -49,9 +49,11 @@ export const ChatContextProvider = (props: ChatContextProviderProps) => {
   };
   const addMessage = () => sendMessage();
 
-  <ChatContext.Provider
-    value={{ addMessage, handleInputChange, isLoading, message }}
-  >
-    {children}
-  </ChatContext.Provider>;
+  return (
+    <ChatContext.Provider
+      value={{ addMessage, handleInputChange, isLoading, message }}
+    >
+      {children}
+    </ChatContext.Provider>
+  );
 };
