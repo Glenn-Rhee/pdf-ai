@@ -95,18 +95,18 @@ export default class MessageService {
             text: completion.text,
             isUserMessage: false,
             fileId: file.id,
+            userId,
           },
         });
       },
     });
 
-    console.log("response from llama3");
-    console.log(await response.toTextStreamResponse().json());
+    const textResponse = await response.toTextStreamResponse().json();
 
     return {
       code: 200,
       data: {
-        response: response.toTextStreamResponse(),
+        response: textResponse,
       },
       message: "Success ask AI",
       status: "success",

@@ -5,6 +5,8 @@ import { prisma } from "@/lib/prisma";
 import FileValidation from "../validation/File-Validation";
 import { UTApi } from "uploadthing/server";
 import { UploadStatus } from "../generated/prisma/enums";
+import z from "zod";
+import { INFINITE_QUERY_LIMIT } from "../config/infinite-query";
 const utapi = new UTApi();
 
 export default class TrpcService {
@@ -103,6 +105,64 @@ export default class TrpcService {
         return {
           status: file.uploadStatus as UploadStatus,
         };
+      });
+  }
+
+  static async getFileMessages() {
+    return privateProcedure
+      .input(
+        z.object({
+          limit: z
+            .number({ error: "Input limit properly!" })
+            .min(1)
+            .max(100)
+            .nullish(),
+          cursor: z.string({ error: "input cursor properly!" }).nullish(),
+          fileId: z.string({ error: "File id is required" }),
+        }),
+      )
+      .query(async ({ ctx, input }) => {
+        const { userId } = ctx;
+        const { fileId, cursor } = input;
+        const limit = input.limit ?? INFINITE_QUERY_LIMIT;
+        const file = await prisma.file.findFirst({
+          where: {
+            id: fileId,
+            userId,
+          },
+        });
+
+        if (!file) {
+          throw new TRPCError({ code: "NOT_FOUND" });
+        }
+
+        const messages = await prisma.message.findMany({
+          where: {
+            fileId,
+          },
+          orderBy: {
+            createdAt: "desc",
+          },
+          take: limit + 1,
+          cursor: cursor ? { id: cursor } : undefined,
+          select: {
+            id: true,
+            isUserMessage: true,
+            createdAt: true,
+            text: true,
+          },
+        });
+
+        let nextCursor: typeof cursor | undefined = undefined;
+        if(messages.length > limit){
+          const nextItem = messages.pop()
+          nextCursor = nextItem?.id
+        }
+
+        return {
+          messages,
+          nextCursor
+        }
       });
   }
 }
