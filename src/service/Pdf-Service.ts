@@ -41,7 +41,7 @@ export default class PDFService {
           await indexPinecone.upsert({ records: vectors });
           vectors.length = 0;
         }
-      }
+      } 
       console.log("processed embedding:", vectors);
       if (vectors.length) {
         await indexPinecone.upsert({ records: vectors });

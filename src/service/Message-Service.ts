@@ -5,7 +5,8 @@ import { prisma } from "@/lib/prisma";
 import ResponseError from "../error/ResponseError";
 import { createEmbedding as embedQuery } from "../lib/embedding";
 import { indexPinecone } from "../lib/pinecone";
-import ollama from "ollama";
+import { streamText } from "ai";
+import { openai } from "../lib/ai";
 
 export default class MessageService {
   static async sendMessage(
@@ -32,34 +33,50 @@ export default class MessageService {
       includeMetadata: true,
     });
 
+    const prevMsg = await prisma.message.findMany({
+      where: {
+        fileId: file.id,
+      },
+      orderBy: {
+        createdAt: "asc",
+      },
+      select: {
+        id: true,
+        isUserMessage: true,
+        text: true,
+      },
+      take: 6,
+    });
+
+    const formattedMsgs = prevMsg.map((msg) => ({
+      role: msg.isUserMessage ? ("USER" as const) : ("ASSISTANT" as const),
+      content: msg.text,
+    }));
+
     const contexts = results.matches.map((m) => m.metadata?.text).join("\n\n");
     const prompt = `
-      Kamu adalah AI asisten dan hanya boleh menjawab berdasarkan context yang sudah saya berikan.
-      Oiya jawaban yang anda berikan tidak perlu mention prompt yang ini. Jika anda ingin mention prompt
-      mention pertanyaan dari user saja. 
+      You are a helpful AI assistant.
+      Use the following pieces of context (or previous conversation if needed) to answer the user's question in MARKDOWN format.
 
-      Apabila user bertanya tentang siapa anda, anda dapat menjawab:
-      "Saya adalah Glenn AI, saya bertugas membantu anda mengenai PDF yang anda upload."
+      If you don't know the answer, just say that you don't know. Do NOT make up an answer.
 
-      Apabila jawaban tidak ada di dalam context, katakan:
-      "Saya tidak dapat menemukan jawaban berdasarkan pertanyaan tersebut, di document."
+      ----------------
 
-      Apabila terdapat user yang meminta rangkuman/ringkasan, anda dapat membuatkannya.
+      PREVIOUS CONVERSATION:
+      ${formattedMsgs.length === 0 ? "No Conversations yet." : formattedMsgs.map((msg) => (msg.role === "USER" ? `User: ${msg.content}` : `Assistant: ${msg.content}`)).join("\n")}
 
-      Context:
+      ----------------
+
+      CONTEXT:
       ${contexts}
 
-      Pertanyaan:
+      User Input: 
       ${data.message}
+
+      Answear:
     `;
     console.log("Asking ollama...");
-    const response = await ollama.generate({
-      model: "llama3",
-      prompt,
-      stream: false,
-    });
-    console.log("response from llama3");
-    console.log(response.response);
+
     await prisma.message.create({
       data: {
         text: data.message,
@@ -69,19 +86,27 @@ export default class MessageService {
       },
     });
 
-    await prisma.message.create({
-      data: {
-        text: response.response,
-        isUserMessage: false,
-        userId,
-        fileId: data.fileId,
+    const response = streamText({
+      model: openai("llama3"),
+      messages: [{ role: "user", content: prompt }],
+      onFinish: async (completion) => {
+        await prisma.message.create({
+          data: {
+            text: completion.text,
+            isUserMessage: false,
+            fileId: file.id,
+          },
+        });
       },
     });
+
+    console.log("response from llama3");
+    console.log(await response.toTextStreamResponse().json());
 
     return {
       code: 200,
       data: {
-        response: response.response,
+        response: response.toTextStreamResponse(),
       },
       message: "Success ask AI",
       status: "success",
