@@ -7,11 +7,10 @@ import { ChatContext } from "./ChatContext";
 
 interface ChatInputProps {
   isDisabled?: boolean;
-  fileId: string;
 }
 
 export default function ChatInput(props: ChatInputProps) {
-  const { isDisabled, fileId } = props;
+  const { isDisabled } = props;
   const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
   const { addMessage, handleInputChange, isLoading, message } =
     useContext(ChatContext);
@@ -37,6 +36,7 @@ export default function ChatInput(props: ChatInputProps) {
                     e.preventDefault();
                     addMessage();
                     textAreaRef.current?.focus();
+                    textAreaRef.current!.value = "";
                   }
                 }}
                 maxRows={4}
@@ -51,6 +51,7 @@ export default function ChatInput(props: ChatInputProps) {
                 onClick={() => {
                   addMessage();
                   textAreaRef.current?.focus();
+                  textAreaRef.current!.value = "";
                 }}
                 className="absolute bottom-1.5 right-2"
               >
