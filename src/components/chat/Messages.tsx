@@ -2,6 +2,7 @@ import { trpc } from "@/app/_trpc/client";
 import { INFINITE_QUERY_LIMIT } from "@/src/config/infinite-query";
 import { Loader2, MessagesSquareIcon } from "lucide-react";
 import Skeleton from "react-loading-skeleton";
+import Message from "./Message";
 
 interface MessagesProps {
   fileId: string;
@@ -40,13 +41,13 @@ export default function Messages(props: MessagesProps) {
       {combinedMessages && combinedMessages.length > 0 ? (
         combinedMessages.map((msg, i) => {
           const isNextMsgSamePerson =
-            combinedMessages[i - 1].isUserMessage ===
+            combinedMessages[i - 1]?.isUserMessage ===
             combinedMessages[i].isUserMessage;
 
           if (i == combinedMessages.length - 1) {
-            return <Message />;
+            return <Message isNextMessageSamePerson={isNextMsgSamePerson} message={msg} key={msg.id} />;
           }
-          return <Message />;
+          return <Message isNextMessageSamePerson={isNextMsgSamePerson} message={msg} key={msg.id} />;
         })
       ) : isLoading ? (
         <div className="w-full flex flex-col gap-2">
