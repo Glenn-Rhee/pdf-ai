@@ -2,6 +2,7 @@ import { trpc } from "@/app/_trpc/client";
 import { INFINITE_QUERY_LIMIT } from "@/src/config/infinite-query";
 import { useMutation } from "@tanstack/react-query";
 import { createContext, useRef, useState } from "react";
+import toast from "react-hot-toast";
 
 type StreamResponse = {
   addMessage: () => void;
@@ -25,10 +26,12 @@ interface ChatContextProviderProps {
 export const ChatContextProvider = (props: ChatContextProviderProps) => {
   const { children, fileId } = props;
   const [message, setMessage] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const utils = trpc.useUtils();
   const backupMessage = useRef("");
-  const { mutate: sendMessage, isPending: isLoading } = useMutation({
+  const { mutate: sendMessage } = useMutation({
     mutationFn: async () => {
+      if (message.trim() === "") return;
       const response = await fetch("/api/message", {
         method: "POST",
         body: JSON.stringify({
@@ -87,12 +90,24 @@ export const ChatContextProvider = (props: ChatContextProviderProps) => {
         },
       );
 
+      setIsLoading(true);
+
       return {
         previousMessages:
           previousMessages?.pages.flatMap((page) => page.messages) ?? [],
       };
     },
-    // onError: ()
+    onError: (_, __, context) => {
+      setMessage(backupMessage.current);
+      utils.getFileMessages.setData(
+        { fileId },
+        { messages: context?.previousMessages ?? [] },
+      );
+    },
+    onSettled: async () => {
+      setIsLoading(false);
+      await utils.getFileMessages.invalidate({ fileId });
+    },
   });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
