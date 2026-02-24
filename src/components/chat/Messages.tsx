@@ -13,7 +13,7 @@ interface MessagesProps {
 export default function Messages(props: MessagesProps) {
   const { fileId } = props;
   const { isLoading: isAiThinking } = useContext(ChatContext);
-  const { data, isLoading, fetchNextPage } =
+  const { data, isLoading } =
     trpc.getFileMessages.useInfiniteQuery(
       {
         fileId,
