@@ -45,9 +45,21 @@ export default function Messages(props: MessagesProps) {
             combinedMessages[i].isUserMessage;
 
           if (i == combinedMessages.length - 1) {
-            return <Message isNextMessageSamePerson={isNextMsgSamePerson} message={msg} key={msg.id} />;
+            return (
+              <Message
+                isNextMessageSamePerson={isNextMsgSamePerson}
+                message={msg}
+                key={msg.id}
+              />
+            );
           }
-          return <Message isNextMessageSamePerson={isNextMsgSamePerson} message={msg} key={msg.id} />;
+          return (
+            <Message
+              isNextMessageSamePerson={isNextMsgSamePerson}
+              message={msg}
+              key={msg.id}
+            />
+          );
         })
       ) : isLoading ? (
         <div className="w-full flex flex-col gap-2">
