@@ -39,9 +39,9 @@ export default class PDFService {
         });
 
         if (vectors.length === 50) {
+          await indexPinecone.upsert({ records: vectors, namespace: file.id });
           vectorsAlreadyUpsert += 50;
           const progress = (vectorsAlreadyUpsert / chunks.length) * 100;
-          await indexPinecone.upsert({ records: vectors, namespace: file.id });
           await prisma.file.update({
             where: { id: file.id },
             data: { progress },
@@ -52,6 +52,12 @@ export default class PDFService {
       console.log("processed embedding:", vectors);
       if (vectors.length) {
         await indexPinecone.upsert({ records: vectors, namespace: file.id });
+        vectorsAlreadyUpsert += vectors.length;
+        const progress = (vectorsAlreadyUpsert / chunks.length) * 100;
+        await prisma.file.update({
+          where: { id: file.id },
+          data: { progress },
+        });
       }
 
       await prisma.file.update({
