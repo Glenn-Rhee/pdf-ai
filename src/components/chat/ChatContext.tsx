@@ -31,7 +31,6 @@ export const ChatContextProvider = (props: ChatContextProviderProps) => {
   const backupMessage = useRef("");
   const { mutate: sendMessage } = useMutation({
     mutationFn: async () => {
-      if (message.trim() === "") return;
       const response = await fetch("/api/message", {
         method: "POST",
         body: JSON.stringify({
@@ -190,6 +189,7 @@ export const ChatContextProvider = (props: ChatContextProviderProps) => {
     setMessage(e.target.value);
   };
   const addMessage = () => {
+    if (message.trim() === "") return;
     setMessage("");
     sendMessage();
   };

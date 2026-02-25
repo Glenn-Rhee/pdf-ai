@@ -38,13 +38,13 @@ export default class PDFService {
         });
 
         if (vectors.length === 50) {
-          await indexPinecone.upsert({ records: vectors });
+          await indexPinecone.upsert({ records: vectors, namespace: file.id });
           vectors.length = 0;
         }
-      } 
+      }
       console.log("processed embedding:", vectors);
       if (vectors.length) {
-        await indexPinecone.upsert({ records: vectors });
+        await indexPinecone.upsert({ records: vectors, namespace: file.id });
       }
 
       await prisma.file.update({
