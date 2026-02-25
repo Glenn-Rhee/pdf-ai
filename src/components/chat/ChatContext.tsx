@@ -191,7 +191,7 @@ export const ChatContextProvider = (props: ChatContextProviderProps) => {
   };
   const addMessage = () => {
     setMessage("");
-    // sendMessage();
+    sendMessage();
   };
 
   return (
