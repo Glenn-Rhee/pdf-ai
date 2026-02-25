@@ -99,11 +99,13 @@ export default class TrpcService {
         if (!file) {
           return {
             status: "PENDING" as const,
+            progress: 0.0,
           };
         }
 
         return {
           status: file.uploadStatus as UploadStatus,
+          progress: file.progress,
         };
       });
   }
@@ -154,15 +156,15 @@ export default class TrpcService {
         });
 
         let nextCursor: typeof cursor | undefined = undefined;
-        if(messages.length > limit){
-          const nextItem = messages.pop()
-          nextCursor = nextItem?.id
+        if (messages.length > limit) {
+          const nextItem = messages.pop();
+          nextCursor = nextItem?.id;
         }
 
         return {
           messages,
-          nextCursor
-        }
+          nextCursor,
+        };
       });
   }
 }

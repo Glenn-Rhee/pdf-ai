@@ -33,7 +33,7 @@ export const ourFileRouter = {
           uploadStatus: "PROCESSING",
         },
       });
-      await PDFService.ingestPdf(createdFile.id, createdFile.userId!);
+      PDFService.ingestPdf(createdFile.id, createdFile.userId!);
     }),
 } satisfies FileRouter;
 

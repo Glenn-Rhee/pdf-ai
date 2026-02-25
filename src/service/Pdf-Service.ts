@@ -27,6 +27,7 @@ export default class PDFService {
 
     const vectors = [];
     console.log("Processing embeding...", chunks.length);
+    let vectorsAlreadyUpsert = 0.0;
     try {
       for (let i = 0; i < chunks.length; i++) {
         console.log("Embedding", i);
@@ -38,7 +39,13 @@ export default class PDFService {
         });
 
         if (vectors.length === 50) {
+          vectorsAlreadyUpsert += 50;
+          const progress = (vectorsAlreadyUpsert / chunks.length) * 100;
           await indexPinecone.upsert({ records: vectors, namespace: file.id });
+          await prisma.file.update({
+            where: { id: file.id },
+            data: { progress },
+          });
           vectors.length = 0;
         }
       }
@@ -64,6 +71,7 @@ export default class PDFService {
         where: { id: file.id },
         data: { uploadStatus: "FAILED" },
       });
+      await indexPinecone.deleteNamespace(file.id);
 
       throw new ResponseError(500, "Error embedding file.");
     }

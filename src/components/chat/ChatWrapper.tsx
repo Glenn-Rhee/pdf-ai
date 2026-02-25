@@ -6,6 +6,7 @@ import { ChevronLeft, Loader2, XCircle } from "lucide-react";
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import { ChatContextProvider } from "./ChatContext";
+import { Progress } from "@/components/ui/progress";
 
 interface ChatWrapperProps {
   fileId: string;
@@ -45,9 +46,16 @@ export default function ChatWrapper(props: ChatWrapperProps) {
       <div className="relative min-h-full bg-zinc-50 flex divide-y divide-zinc-200 flex-col justify-between gap-2">
         <div className="flex-1 flex justify-center items-center flex-col mb-28">
           <div className="flex flex-col items-center gap-2">
-            <Loader2 className="h-8 2-8 text-orange-500 animate-spin" />
             <h3 className="font-semibold text-xl">Processing PDF...</h3>
             <p className="text-zinc-500 text-sm">This Won&apos;t take long.</p>
+            <Progress
+              indicatorColor={data.progress === 100 ? "bg-green-500" : ""}
+              value={data.progress}
+              className="h-1 w-full bg-zinc-200"
+            />
+            <span className="text-zinc-500 text-sm">
+              {data.progress.toFixed(2)}%
+            </span>
           </div>
         </div>
         <ChatInput isDisabled />

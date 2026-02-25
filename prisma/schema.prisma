@@ -37,7 +37,7 @@ model File {
   uploadStatus UploadStatus @default(PENDING)
   url          String
   key          String
-  progress     Int          @default(0)
+  progress     Float        @default(0.0)
   Message      Message[]
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
