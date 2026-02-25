@@ -36,7 +36,6 @@ export default function ChatInput(props: ChatInputProps) {
                     e.preventDefault();
                     addMessage();
                     textAreaRef.current?.focus();
-                    textAreaRef.current!.value = "";
                   }
                 }}
                 maxRows={4}
@@ -51,7 +50,6 @@ export default function ChatInput(props: ChatInputProps) {
                 onClick={() => {
                   addMessage();
                   textAreaRef.current?.focus();
-                  textAreaRef.current!.value = "";
                 }}
                 className="absolute bottom-1.5 right-2"
               >
