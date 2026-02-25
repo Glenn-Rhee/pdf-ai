@@ -7,6 +7,7 @@ import { UTApi } from "uploadthing/server";
 import { UploadStatus } from "../generated/prisma/enums";
 import z from "zod";
 import { INFINITE_QUERY_LIMIT } from "../config/infinite-query";
+import { indexPinecone } from "../lib/pinecone";
 const utapi = new UTApi();
 
 export default class TrpcService {
@@ -77,9 +78,9 @@ export default class TrpcService {
           throw new TRPCError({ code: "NOT_FOUND" });
         }
 
-        await utapi.deleteFiles(file.key);
-
         await prisma.file.delete({ where: { id: input.id, userId } });
+        await utapi.deleteFiles(file.key);
+        await indexPinecone.deleteNamespace(file.id);
 
         return file;
       });
