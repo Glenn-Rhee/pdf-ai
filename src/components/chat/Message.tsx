@@ -2,7 +2,7 @@ import { cn } from "@/lib/utils";
 import { ExtendedMessage } from "@/src/types";
 import { Icons } from "../Icons";
 import ReactMarkdown from "react-markdown";
-import { format } from "date-fns";
+import { formatChatDate } from "@/src/helper/formatChatDate";
 
 interface MessageProps {
   isNextMessageSamePerson: boolean;
@@ -62,7 +62,7 @@ export default function Message(props: MessageProps) {
                 "text-orange-300": message.isUserMessage,
               })}
             >
-              {format(new Date(message.createdAt), "HH:mm")}
+              {formatChatDate(new Date(message.createdAt))}
             </div>
           ) : null}
         </div>
