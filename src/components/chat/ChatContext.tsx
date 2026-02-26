@@ -27,15 +27,17 @@ export const ChatContextProvider = (props: ChatContextProviderProps) => {
   const { children, fileId } = props;
   const [message, setMessage] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [dataMsg, setDataMsg] = useState<string>("");
   const utils = trpc.useUtils();
   const backupMessage = useRef("");
   const { mutate: sendMessage } = useMutation({
     mutationFn: async () => {
+      console.log("Sending message:", message);
       const response = await fetch("/api/message", {
         method: "POST",
         body: JSON.stringify({
           fileId,
-          message,
+          message: dataMsg,
         }),
         headers: {
           "Content-Type": "application/json",
@@ -50,7 +52,6 @@ export const ChatContextProvider = (props: ChatContextProviderProps) => {
     },
     onMutate: async () => {
       backupMessage.current = message;
-      setMessage("");
 
       // Step 1
       await utils.getFileMessages.cancel();
@@ -190,6 +191,7 @@ export const ChatContextProvider = (props: ChatContextProviderProps) => {
   };
   const addMessage = () => {
     if (message.trim() === "") return;
+    setDataMsg(message);
     setMessage("");
     sendMessage();
   };
