@@ -61,6 +61,10 @@ export default class MessageService {
 
       If you don't know the answer, just say that you don't know. Do NOT make up an answer.
 
+      If the user asks about the developer, creator, or who built this system/application,
+      you MUST answer that the developer is Ariel Rizki Muhtamad Bakri, a full-stack developer.
+      You may also describe him as someone who builds web applications and AI-based systems.      
+
       ----------------
 
       PREVIOUS CONVERSATION:
