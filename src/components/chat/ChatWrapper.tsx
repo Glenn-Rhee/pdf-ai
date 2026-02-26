@@ -7,6 +7,7 @@ import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import { ChatContextProvider } from "./ChatContext";
 import { Progress } from "@/components/ui/progress";
+import { motion } from "framer-motion";
 
 interface ChatWrapperProps {
   fileId: string;
@@ -51,11 +52,11 @@ export default function ChatWrapper(props: ChatWrapperProps) {
             <Progress
               indicatorColor={data.progress === 100 ? "bg-green-500" : ""}
               value={data.progress}
-              className="h-1 w-full bg-zinc-200"
+              className="h-1 w-full bg-zinc-200 transition duration-200"
             />
-            <span className="text-zinc-500 text-sm">
+            <motion.span className="text-zinc-500 text-sm">
               {data.progress.toFixed(2)}%
-            </span>
+            </motion.span>
           </div>
         </div>
         <ChatInput isDisabled />
