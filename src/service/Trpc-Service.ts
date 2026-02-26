@@ -81,6 +81,7 @@ export default class TrpcService {
         await prisma.file.delete({ where: { id: input.id, userId } });
         await utapi.deleteFiles(file.key);
         await indexPinecone.deleteNamespace(file.id);
+        await prisma.message.deleteMany({ where: { fileId: file.id } });
 
         return file;
       });
