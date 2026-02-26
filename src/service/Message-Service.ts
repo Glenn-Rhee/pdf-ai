@@ -31,6 +31,7 @@ export default class MessageService {
       vector: queryEmbedding,
       topK: 5,
       includeMetadata: true,
+      namespace: file.id,
     });
 
     const prevMsg = await prisma.message.findMany({
