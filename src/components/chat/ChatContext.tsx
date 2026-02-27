@@ -33,7 +33,6 @@ export const ChatContextProvider = (props: ChatContextProviderProps) => {
   const backupMessage = useRef("");
   const { mutate: sendMessage } = useMutation({
     mutationFn: async () => {
-      console.log("Sending message:", message);
       const response = await fetch("/api/message", {
         method: "POST",
         body: JSON.stringify({
