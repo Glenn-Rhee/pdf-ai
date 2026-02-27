@@ -34,7 +34,7 @@ export default function PdfFullscreen(props: PdfFullScreenProps) {
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-7xl w-full">
-        <DialogTitle className="text-center h-4 w-full truncate">
+        <DialogTitle className="text-center py-2 w-full truncate">
           {fileName}
         </DialogTitle>
         <SimpleBar autoHide={false} className="max-h-[calc(100dvh-10rem)] mt-6">
