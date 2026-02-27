@@ -1,10 +1,11 @@
 import { trpc } from "@/app/_trpc/client";
 import { INFINITE_QUERY_LIMIT } from "@/src/config/infinite-query";
-import { Loader2, MessagesSquareIcon } from "lucide-react";
+import {  MessagesSquareIcon } from "lucide-react";
 import Skeleton from "react-loading-skeleton";
 import Message from "./Message";
 import { useContext } from "react";
 import { ChatContext } from "./ChatContext";
+import { cn } from "@/lib/utils";
 
 interface MessagesProps {
   fileId: string;
@@ -29,9 +30,17 @@ export default function Messages(props: MessagesProps) {
     id: "loading-message",
     isUserMessage: false,
     text: (
-      <span className="flex h-full items-center justify-center">
-        <Loader2 className="h-4 w-4 animate-spin" />
-      </span>
+      <div className="flex items-center gap-x-1">
+        {Array.from({ length: 3 }).map((_, i) => (
+          <div
+            key={i}
+            className={cn(
+              "w-3 h-3 animate-pulse rounded-full bg-orange-500 border border-orange-600",
+              `delay-${i * 200}`,
+            )}
+          />
+        ))}
+      </div>
     ),
   };
   const combinedMessages = [
