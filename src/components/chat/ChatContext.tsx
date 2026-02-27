@@ -1,5 +1,6 @@
 import { trpc } from "@/app/_trpc/client";
 import { INFINITE_QUERY_LIMIT } from "@/src/config/infinite-query";
+import { useMessageStore } from "@/src/store/useMessageStore";
 import { useMutation } from "@tanstack/react-query";
 import { createContext, useRef, useState } from "react";
 import toast from "react-hot-toast";
@@ -25,7 +26,7 @@ interface ChatContextProviderProps {
 
 export const ChatContextProvider = (props: ChatContextProviderProps) => {
   const { children, fileId } = props;
-  const [message, setMessage] = useState<string>("");
+  const { message, setMessage } = useMessageStore();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [dataMsg, setDataMsg] = useState<string>("");
   const utils = trpc.useUtils();
