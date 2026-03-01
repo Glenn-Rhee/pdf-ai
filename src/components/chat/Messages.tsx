@@ -3,9 +3,10 @@ import { INFINITE_QUERY_LIMIT } from "@/src/config/infinite-query";
 import { MessagesSquareIcon } from "lucide-react";
 import Skeleton from "react-loading-skeleton";
 import Message from "./Message";
-import { useContext } from "react";
+import { useContext, useRef } from "react";
 import { ChatContext } from "./ChatContext";
 import { cn } from "@/lib/utils";
+import { useIntersection } from "@mantine/hooks";
 
 interface MessagesProps {
   fileId: string;
@@ -48,6 +49,8 @@ export default function Messages(props: MessagesProps) {
     ...(messages ?? []),
   ];
 
+  const lastMessageRef = useRef<HTMLDivElement | null>(null);
+
   return (
     <div className="flex max-h-[calc(100vh-3.5rem-7rem)] border-zinc-200 flex-1 flex-col-reverse gap-4 p-3 overflow-y-auto scrollbar-thumb-orange scrollbar-thumb-rounded scrollbar-track-orange-lighter scrollbar-w-2 scrolling-touch">
       {combinedMessages && combinedMessages.length > 0 ? (
@@ -59,6 +62,7 @@ export default function Messages(props: MessagesProps) {
           if (i == combinedMessages.length - 1) {
             return (
               <Message
+              
                 isNextMessageSamePerson={isNextMsgSamePerson}
                 message={msg}
                 key={msg.id}
