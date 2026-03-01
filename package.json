@@ -12,6 +12,7 @@
     "@ai-sdk/openai": "^3.0.30",
     "@hookform/resolvers": "^5.2.2",
     "@kinde-oss/kinde-auth-nextjs": "^2.11.0",
+    "@mantine/hooks": "^8.3.15",
     "@pinecone-database/pinecone": "^7.0.0",
     "@prisma/adapter-mariadb": "^7.3.0",
     "@prisma/client": "^7.3.0",
