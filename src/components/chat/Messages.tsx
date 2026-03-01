@@ -1,6 +1,6 @@
 import { trpc } from "@/app/_trpc/client";
 import { INFINITE_QUERY_LIMIT } from "@/src/config/infinite-query";
-import {  MessagesSquareIcon } from "lucide-react";
+import { MessagesSquareIcon } from "lucide-react";
 import Skeleton from "react-loading-skeleton";
 import Message from "./Message";
 import { useContext } from "react";
