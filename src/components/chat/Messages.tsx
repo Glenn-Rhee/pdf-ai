@@ -94,11 +94,11 @@ export default function Messages(props: MessagesProps) {
           );
         })
       ) : isLoading ? (
-        <div className="w-full flex flex-col gap-2">
-          <Skeleton className="h-16" />
-          <Skeleton className="h-16" />
-          <Skeleton className="h-16" />
-          <Skeleton className="h-16" />
+        <div className="w-full flex flex-col gap-2 items-end">
+          <Skeleton className="h-16 max-w-md" />
+          <Skeleton className="h-16 max-w-md" />
+          <Skeleton className="h-16 max-w-md" />
+          <Skeleton className="h-16 max-w-md" />
         </div>
       ) : (
         <div className="flex-1 flex flex-col items-center justify-center gap-2">
