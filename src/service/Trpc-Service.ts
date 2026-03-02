@@ -144,11 +144,17 @@ export default class TrpcService {
           where: {
             fileId,
           },
-          orderBy: {
-            createdAt: "desc",
-          },
+          orderBy: [
+            {
+              createdAt: "desc",
+            },
+            {
+              id: "desc",
+            },
+          ],
           take: limit + 1,
           cursor: cursor ? { id: cursor } : undefined,
+          skip: cursor ? 1 : 0,
           select: {
             id: true,
             isUserMessage: true,
