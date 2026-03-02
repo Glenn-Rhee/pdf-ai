@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "ai": "ollama run llama3"
   },
   "dependencies": {
     "@ai-sdk/openai": "^3.0.30",
