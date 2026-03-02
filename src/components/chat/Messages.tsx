@@ -66,7 +66,6 @@ export default function Messages(props: MessagesProps) {
       fetchNextPage();
     }
   }, [entry?.isIntersecting, hasNextPage, fetchNextPage]);
-  console.log("messages", messages);
   return (
     <div className="flex max-h-[calc(100vh-3.5rem-7rem)] border-zinc-200 flex-1 flex-col-reverse gap-4 p-3 overflow-y-auto scrollbar-thumb-orange scrollbar-thumb-rounded scrollbar-track-orange-lighter scrollbar-w-2 scrolling-touch">
       {combinedMessages && combinedMessages.length > 0 ? (
