@@ -89,17 +89,14 @@ export default async function PricingPage() {
               return (
                 <div
                   key={item.plan}
-                  className={cn(
-                    "relative rounded-2xl shadow-lg bg-white overflow-hidden",
-                    {
-                      "border-2 border-orange-600 shadow-blue-200":
-                        item.plan === "Pro",
-                      "border border-gray-200": item.plan !== "Pro",
-                    },
-                  )}
+                  className={cn("relative rounded-2xl shadow-lg bg-white ", {
+                    "border-2 border-orange-600 shadow-blue-200":
+                      item.plan === "Pro",
+                    "border border-gray-200": item.plan !== "Pro",
+                  })}
                 >
                   {item.plan === "Pro" && (
-                    <div className="absolute -top-5 left-0 right-0 mx-auto w-32 rounded-full bg-linear-to-r from-orange-600 to-amber-600 px-3 py-2 text-sm font-medium text-white">
+                    <div className="absolute -top-5 z-10 left-0 right-0 mx-auto w-32 rounded-full bg-linear-to-r from-orange-600 to-amber-600 px-3 py-2 text-sm font-medium text-white">
                       Upgrade Now
                     </div>
                   )}
