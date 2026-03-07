@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 import MaxWidthWrapper from "@/src/components/MaxWidthWrapper";
 import { PLANS } from "@/src/config/stripe";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
-import { HelpCircle } from "lucide-react";
+import { Check, HelpCircle, Minus } from "lucide-react";
 
 const pricingItems = [
   {
@@ -89,11 +89,14 @@ export default async function PricingPage() {
               return (
                 <div
                   key={item.plan}
-                  className={cn("relative rounded-2xl shadow-lg bg-white overflow-hidden", {
-                    "border-2 border-orange-600 shadow-blue-200":
-                      item.plan === "Pro",
-                    "border border-gray-200": item.plan !== "Pro",
-                  })}
+                  className={cn(
+                    "relative rounded-2xl shadow-lg bg-white overflow-hidden",
+                    {
+                      "border-2 border-orange-600 shadow-blue-200":
+                        item.plan === "Pro",
+                      "border border-gray-200": item.plan !== "Pro",
+                    },
+                  )}
                 >
                   {item.plan === "Pro" && (
                     <div className="absolute -top-5 left-0 right-0 mx-auto w-32 rounded-full bg-linear-to-r from-orange-600 to-amber-600 px-3 py-2 text-sm font-medium text-white">
@@ -125,6 +128,47 @@ export default async function PricingPage() {
                       </Tooltip>
                     </div>
                   </div>
+
+                  <ul className="my-10 space-y-5 px-8">
+                    {item.features.map((feature) => (
+                      <li key={feature.text} className="flex space-x-5">
+                        <div className="shring-0">
+                          {feature.negative ? (
+                            <Minus className="h-6 w-6 text-gray-300" />
+                          ) : (
+                            <Check className="h-6 w-6 text-orange-500" />
+                          )}
+                        </div>
+                        {feature.footnote ? (
+                          <div className="flex items-center space-x-1">
+                            <p
+                              className={cn("text-gray-400", {
+                                "text-gray-600": feature.negative,
+                              })}
+                            >
+                              {feature.text}
+                            </p>
+                            <Tooltip delayDuration={300}>
+                              <TooltipTrigger className="cursor-default ml-1.5">
+                                <HelpCircle className="h-4 w-4 text-zinc-500" />
+                              </TooltipTrigger>
+                              <TooltipContent className="w-80 p-2">
+                                {feature.footnote}
+                              </TooltipContent>
+                            </Tooltip>
+                          </div>
+                        ) : (
+                          <p
+                            className={cn("text-gray-400", {
+                              "text-gray-600": feature.negative,
+                            })}
+                          >
+                            {feature.text}
+                          </p>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               );
             })}
