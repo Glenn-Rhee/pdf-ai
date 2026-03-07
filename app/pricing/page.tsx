@@ -1,8 +1,14 @@
-import { TooltipProvider } from "@/components/ui/tooltip";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import MaxWidthWrapper from "@/src/components/MaxWidthWrapper";
 import { PLANS } from "@/src/config/stripe";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import { HelpCircle } from "lucide-react";
 
 const pricingItems = [
   {
@@ -83,7 +89,7 @@ export default async function PricingPage() {
               return (
                 <div
                   key={item.plan}
-                  className={cn("relative rounded-2xl shadow-lg bg-white", {
+                  className={cn("relative rounded-2xl shadow-lg bg-white overflow-hidden", {
                     "border-2 border-orange-600 shadow-blue-200":
                       item.plan === "Pro",
                     "border border-gray-200": item.plan !== "Pro",
@@ -94,6 +100,31 @@ export default async function PricingPage() {
                       Upgrade Now
                     </div>
                   )}
+
+                  <div className="p-5">
+                    <h3 className="my-3 text-center text-3xl font-bold">
+                      {item.plan}
+                    </h3>
+                    <p className="text-gray-500">{item.tagline}</p>
+                    <p className="my-5 text-6xl font-semibold">
+                      {price.toFixed(2)}
+                    </p>
+                    <p className="text-gray-500">per month</p>
+                  </div>
+
+                  <div className="flex h-20 items-center justify-center border-b border-t border-gray-200 bg-gray-50">
+                    <div className="flex items-center space-x-1">
+                      <p>{item.quota.toLocaleString()} PDFs/mo included</p>
+                      <Tooltip delayDuration={300}>
+                        <TooltipTrigger className="cursor-default ml-1.5">
+                          <HelpCircle className="h-4 w-4 text-zinc-500" />
+                        </TooltipTrigger>
+                        <TooltipContent className="w-80 p-2">
+                          How many PDFs you can upload per month
+                        </TooltipContent>
+                      </Tooltip>
+                    </div>
+                  </div>
                 </div>
               );
             })}
