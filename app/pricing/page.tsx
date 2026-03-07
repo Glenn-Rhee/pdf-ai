@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import MaxWidthWrapper from "@/src/components/MaxWidthWrapper";
+import UpgradeButton from "@/src/components/UpgradeButton";
 import { PLANS } from "@/src/config/stripe";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { ArrowRight, Check, HelpCircle, Minus } from "lucide-react";
