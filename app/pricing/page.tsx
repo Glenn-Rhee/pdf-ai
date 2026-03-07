@@ -1,3 +1,4 @@
+import { buttonVariants } from "@/components/ui/button";
 import {
   Tooltip,
   TooltipContent,
@@ -8,7 +9,8 @@ import { cn } from "@/lib/utils";
 import MaxWidthWrapper from "@/src/components/MaxWidthWrapper";
 import { PLANS } from "@/src/config/stripe";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
-import { Check, HelpCircle, Minus } from "lucide-react";
+import { ArrowRight, Check, HelpCircle, Minus } from "lucide-react";
+import Link from "next/link";
 
 const pricingItems = [
   {
@@ -166,6 +168,30 @@ export default async function PricingPage() {
                       </li>
                     ))}
                   </ul>
+                  <div className="border-t border-gray-200" />
+                  <div className="p-5">
+                    {item.plan === "Free" ? (
+                      <Link
+                        href={user ? "/dashboard" : "/sign-in"}
+                        className={buttonVariants({
+                          className: "w-full",
+                          variant: "secondary"
+                        })}
+                      ></Link>
+                    ) : user ? (
+                      <UpgradeButton />
+                    ) : (
+                      <Link
+                        href={"/sign-in"}
+                        className={buttonVariants({
+                          className: "w-full",
+                        })}
+                      >
+                        {user ? "Upgrade Now" : "Sign up"}
+                        <ArrowRight  className="h-5 w-5 ml-1.5"/>
+                      </Link>
+                    )}
+                  </div>
                 </div>
               );
             })}
