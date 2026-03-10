@@ -10,6 +10,7 @@ import HeaderPricing from "@/src/components/HeaderPricing";
 import MaxWidthWrapper from "@/src/components/MaxWidthWrapper";
 import UpgradeButton from "@/src/components/UpgradeButton";
 import { PLANS } from "@/src/config/stripe";
+import { pricingItems } from "@/src/utils/pricing-items";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { ArrowRight, Check, HelpCircle, Minus } from "lucide-react";
 import Link from "next/link";
