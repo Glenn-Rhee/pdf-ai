@@ -6,6 +6,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
+import HeaderPricing from "@/src/components/HeaderPricing";
 import MaxWidthWrapper from "@/src/components/MaxWidthWrapper";
 import UpgradeButton from "@/src/components/UpgradeButton";
 import { PLANS } from "@/src/config/stripe";
@@ -75,6 +76,7 @@ export default async function PricingPage() {
   return (
     <>
       <MaxWidthWrapper className="mb-8 mt-24 text-center max-w-5xl">
+        <HeaderPricing />
         <div className="pt-12 grid grid-cols-1 gap-10 lg:grid-cols-2">
           <TooltipProvider>
             {pricingItems.map((item) => {
