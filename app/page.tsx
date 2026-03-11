@@ -1,4 +1,5 @@
 import { buttonVariants } from "@/components/ui/button";
+import Featured from "@/src/components/Featured";
 import MaxWidthWrapper from "@/src/components/MaxWidthWrapper";
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
@@ -76,6 +77,7 @@ export default function HomePage() {
       </div>
 
       {/* Featured */}
+      <Featured />
     </>
   );
 }
