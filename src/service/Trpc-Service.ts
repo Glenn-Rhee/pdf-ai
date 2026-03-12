@@ -8,6 +8,9 @@ import { UploadStatus } from "../generated/prisma/enums";
 import z from "zod";
 import { INFINITE_QUERY_LIMIT } from "../config/infinite-query";
 import { indexPinecone } from "../lib/pinecone";
+import { absoluteUrl } from "../lib/utils";
+import { getUserSubscriptionPlan, stripe } from "../lib/stripe";
+import { PLANS } from "../config/stripe";
 const utapi = new UTApi();
 
 export default class TrpcService {
@@ -174,5 +177,51 @@ export default class TrpcService {
           nextCursor,
         };
       });
+  }
+
+  static createStripeSession() {
+    return privateProcedure.mutation(async ({ ctx }) => {
+      const { userId } = ctx;
+
+      const billingUrl = absoluteUrl("/dashboard/billing");
+      if (!userId) throw new TRPCError({ code: "UNAUTHORIZED" });
+
+      const dataUser = await prisma.user.findFirst({
+        where: { id: userId },
+      });
+
+      if (!dataUser) throw new TRPCError({ code: "UNAUTHORIZED" });
+
+      const subscriiptionPlan = await getUserSubscriptionPlan();
+
+      if (subscriiptionPlan.isSubscribed && dataUser.stripeCustomerId) {
+        const stripeSession = await stripe.billingPortal.sessions.create({
+          customer: dataUser.stripeCustomerId,
+          return_url: billingUrl,
+        });
+
+        return { url: stripeSession.url };
+      }
+
+      const stripeSession = await stripe.checkout.sessions.create({
+        success_url: billingUrl,
+        cancel_url: billingUrl,
+        payment_method_types: ["card", "paypal"],
+        mode: "subscription",
+        billing_address_collection: "auto",
+        line_items: [
+          {
+            price: PLANS.find((plan) => plan.name === "Pro")?.price.priceIds
+              .test,
+            quantity: 1,
+          },
+        ],
+        metadata: {
+          userId,
+        },
+      });
+
+      return { url: stripeSession.url };
+    });
   }
 }
