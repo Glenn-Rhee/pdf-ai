@@ -7,7 +7,8 @@ export const appRouter = router({
   getFile: await TrpcService.getFile(),
   deleteFile: await TrpcService.deleteFile(),
   getFileUploadStatus: await TrpcService.getFileUploadStatus(),
-  getFileMessages: await TrpcService.getFileMessages() 
+  getFileMessages: await TrpcService.getFileMessages(),
+  createStripeSession: await TrpcService.createStripeSession()
 });
 
 export type AppRouter = typeof appRouter;
