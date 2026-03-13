@@ -1,4 +1,5 @@
 import { buttonVariants } from "@/components/ui/button";
+import BgDecoration from "@/src/components/BgDecoration";
 import Featured from "@/src/components/Featured";
 import MaxWidthWrapper from "@/src/components/MaxWidthWrapper";
 import { ArrowRight } from "lucide-react";
@@ -31,7 +32,7 @@ export default function HomePage() {
         </Link>
       </MaxWidthWrapper>
       {/* Value proporisiton section */}
-
+      <BgDecoration />
       {/* Featured */}
       <Featured />
     </>
