@@ -117,9 +117,12 @@ export default async function PricingPage() {
                         href={user ? "/dashboard" : "/sign-in"}
                         className={buttonVariants({
                           className: "w-full",
-                          variant: "secondary"
+                          variant: "secondary",
                         })}
-                      ></Link>
+                      >
+                        {user ? "Upgrade Now" : "Sign up"}
+                        <ArrowRight className="h-5 w-5 ml-1.5" />
+                      </Link>
                     ) : user ? (
                       <UpgradeButton />
                     ) : (
@@ -130,7 +133,7 @@ export default async function PricingPage() {
                         })}
                       >
                         {user ? "Upgrade Now" : "Sign up"}
-                        <ArrowRight  className="h-5 w-5 ml-1.5"/>
+                        <ArrowRight className="h-5 w-5 ml-1.5" />
                       </Link>
                     )}
                   </div>
