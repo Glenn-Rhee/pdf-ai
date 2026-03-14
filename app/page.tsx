@@ -3,7 +3,6 @@ import BgDecoration from "@/src/components/BgDecoration";
 import Featured from "@/src/components/Featured";
 import MaxWidthWrapper from "@/src/components/MaxWidthWrapper";
 import { ArrowRight } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 
 export default function HomePage() {
