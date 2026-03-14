@@ -21,7 +21,17 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "PDF Glenn-AI",
-  description: "An AI-powered web app that lets users upload PDFs and ask questions to instantly get contextual answers based on document content.",
+  description:
+    "An AI-powered web app that lets users upload PDFs and ask questions to instantly get contextual answers based on document content.",
+  keywords: [
+    "PDF",
+    "AI",
+    "ChatPDF",
+    "Document Q&A",
+    "Natural Language Processing",
+    "Machine Learning",
+    "Web App",
+  ],
 };
 
 export default function RootLayout({
