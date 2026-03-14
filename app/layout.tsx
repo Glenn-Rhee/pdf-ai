@@ -32,6 +32,7 @@ export const metadata: Metadata = {
     "Machine Learning",
     "Web App",
   ],
+  authors:[{name: "Ariel Rizki Muhtamad Bakri", url: "https://ariel-rizki-portofolio.vercel.app/"}]
 };
 
 export default function RootLayout({
