@@ -31,6 +31,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="light">
+      <head></head>
       <body
         className={cn(
           `${geistSans.variable} ${geistMono.variable} antialiased`,
