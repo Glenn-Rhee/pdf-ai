@@ -38,6 +38,9 @@ export const metadata: Metadata = {
       url: "https://ariel-rizki-portofolio.vercel.app/",
     },
   ],
+  openGraph: {
+    
+  }
 };
 
 export const viewport: Viewport = {
