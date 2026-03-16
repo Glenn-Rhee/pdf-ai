@@ -40,6 +40,9 @@ export const metadata: Metadata = {
   ],
   openGraph: {
     title: "PDF Glenn-AI",
+  },
+  robots: {
+    
   }
 };
 
