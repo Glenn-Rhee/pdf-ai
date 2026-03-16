@@ -42,7 +42,7 @@ export const metadata: Metadata = {
     title: "PDF Glenn-AI",
   },
   robots: {
-    
+    index: true,
   }
 };
 
