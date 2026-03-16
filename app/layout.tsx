@@ -45,6 +45,8 @@ export const metadata: Metadata = {
     index: true,
     follow: true,
     nocache: true,
+    googleBot: {
+    },
   },
 };
 
