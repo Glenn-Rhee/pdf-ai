@@ -5,7 +5,7 @@ import MaxWidthWrapper from "@/src/components/MaxWidthWrapper";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 
-export 
+export const
 
 export default function HomePage() {
   return (
