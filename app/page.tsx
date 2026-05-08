@@ -6,7 +6,7 @@ import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 
 export const metadata = {
-   
+   title: "Home Page",
 }
 
 export default function HomePage() {
