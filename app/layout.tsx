@@ -20,7 +20,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "PDF Glenn",
+  title: "PDF Gle",
   description:
     "An AI-powered web app that lets users upload PDFs and ask questions to instantly get contextual answers based on document content.",
   keywords: [
